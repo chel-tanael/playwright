@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { userData } from '../data/data.ts';
 
 test('Go to Elements page', async ({ page }) => {
   await page.goto('https://demoqa.com/');
@@ -26,24 +27,26 @@ test('Verify and Test Text Box', async ({ page }) => {
   await page.getByRole('heading', { name: 'Elements' }).click();
   await page.getByRole('listitem').filter({ hasText: 'Text Box' }).click();
   await expect(page.getByRole('heading', { name: 'Text Box' })).toBeVisible();
-  expect(page.getByText('Full Name')).toBeVisible;
+  await expect(page.locator('#userName-label', { hasText: 'Full Name' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Full Name' })).toBeVisible();
-
-  expect(page.getByText('Email')).toBeVisible;
+  await expect(page.locator('#userEmail-label', { hasText: 'Email' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'name@example.com' })).toBeVisible();
-  expect(page.getByText('Current Address')).toBeVisible;
-  await expect(page.getByRole('textbox', { name: /currentAddress/ })).toBeVisible();
-  expect(page.getByText('Permanent Address')).toBeVisible;
-  await expect(page.getByRole('textbox', { name: /permanendAddress/ })).toBeVisible();
+  await expect(page.locator('#currentAddress-label', { hasText: 'Current Address' })).toBeVisible;
+  await expect(page.getByRole('textbox', { name: 'Current Address' })).toBeVisible();
+  await expect(page.locator('#permanentAddress-label', { hasText: 'Permanent Address' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
-
-  await page.getByText('Full Name').click();
   await page.getByRole('textbox', { name: 'Full Name' }).click();
-  await page.getByRole('textbox', { name: 'Full Name' }).fill('test');
+  await page.getByRole('textbox', { name: 'Full Name' }).fill(userData.fullName);
   await page.getByRole('textbox', { name: 'name@example.com' }).click();
-  await page.getByRole('textbox', { name: 'name@example.com' }).fill('dsdfsdf');
+  await page.getByRole('textbox', { name: 'name@example.com' }).fill(userData.email);
   await page.getByRole('textbox', { name: 'Current Address' }).click();
-  await page.getByRole('textbox', { name: 'Current Address' }).fill('cvbc');
+  await page.getByRole('textbox', { name: 'Current Address' }).fill(userData.currentAddress);
   await page.locator('#permanentAddress').click();
-  await page.locator('#permanentAddress').fill('dfgdfg');
+  await page.locator('#permanentAddress').fill(userData.permanentAddress);
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.locator('p#name', { hasText: `Name:${userData.fullName}` })).toBeVisible();
+  await expect(page.locator('p#email', { hasText: `Email:${userData.email}` })).toBeVisible();
+  await expect(page.locator('p#currentAddress', { hasText: `Current Address :${userData.currentAddress}` })).toBeVisible();
+  await expect(page.locator('p#permanentAddress', { hasText: `Permananet Address :${userData.permanentAddress}` })).toBeVisible();
+  await page.close();
 })
