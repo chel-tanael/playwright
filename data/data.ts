@@ -4,3 +4,9 @@ export const userData = {
   currentAddress: '123 Walker St., North Sydney, NSW 2060',
   permanentAddress: '123 Walker St., North Sydney, NSW 2060'
 }
+
+export const radioB = {
+  yes: 'Yes',
+  impressive: 'Impressive',
+  no: ''
+}

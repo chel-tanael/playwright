@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { userData } from '../data/data.ts';
+import { radioB } from '../data/data.ts';
 
 test('Go to Elements page', async ({ page }) => {
   await page.goto('https://demoqa.com/');
   await page.getByRole('heading', { name: 'Elements' }).click();
   await expect(page).toHaveTitle(/DEMOQA/);
   await expect(page).toHaveURL(/elements/);
+  await page.close();
 });
 
 test('Verify submenus under Elements', async ({ page }) => {
@@ -20,6 +22,7 @@ test('Verify submenus under Elements', async ({ page }) => {
   await expect(page.getByRole('listitem').filter({ hasText: 'Broken Links - Images' })).toBeVisible();
   await expect(page.getByRole('listitem').filter({ hasText: 'Upload and Download' })).toBeVisible();
   await expect(page.getByRole('listitem').filter({ hasText: 'Dynamic Properties' })).toBeVisible();
+  await page.close();
 });
 
 test('Verify and Test Text Box', async ({ page }) => {
@@ -49,4 +52,28 @@ test('Verify and Test Text Box', async ({ page }) => {
   await expect(page.locator('p#currentAddress', { hasText: `Current Address :${userData.currentAddress}` })).toBeVisible();
   await expect(page.locator('p#permanentAddress', { hasText: `Permananet Address :${userData.permanentAddress}` })).toBeVisible();
   await page.close();
-})
+});
+
+test('Verify and Test Check Box', async ({ page }) => {
+  await page.goto('https://demoqa.com/');
+  await page.getByRole('heading', { name: 'Elements' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'Check Box' }).click();
+  
+
+});
+
+test('Verify and Test Radio Button', async ({ page }) => {
+  await page.goto('https://demoqa.com/');
+  await page.getByRole('heading', { name: 'Elements' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'Radio Button' }).click();
+  await expect(page.getByRole('heading', { name: 'Radio Button' })).toBeVisible();
+  await expect(page.locator('.mb-3', { hasText: 'Do you like the site?' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Yes' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Impressive' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'No' })).toBeVisible();
+  await page.locator('label[for="yesRadio"]').click();
+  await expect(page.locator('p.mt-3', { hasText: `You have selected ${radioB.yes}` })).toBeVisible();
+  await page.locator('label[for="impressiveRadio"]').click();
+  await expect(page.locator('p.mt-3', { hasText: `You have selected ${radioB.impressive}` })).toBeVisible();
+  await expect(await page.getByRole('radio', { name: 'No' }).isDisabled()).toBe(true);
+});
